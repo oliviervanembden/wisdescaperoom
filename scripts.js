@@ -98,7 +98,7 @@ function showHint() {
 
 const questions = {
     1: { question: "Vraag 1: Wat is 5 + 3?", answer: "8" },
-    2: { question: "Vraag 2: Los op: 8x - 186.372 = y, 16 - √x + 225.666", answer: "161", hint: "Het snijpunt is een cordinaat." },
+    2: { question: "Vraag 2: Los op: 8x - 186.372 = y en 16 - √x + 225.666 = y", answer: "161", hint: "Het snijpunt is een cordinaat." },
     // Voeg meer vragen toe zoals nodig
 };
 
