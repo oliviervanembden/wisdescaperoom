@@ -4,6 +4,7 @@ let hintAvailable = false; // Variabele om bij te houden of de hint beschikbaar 
 let elapsedTime = 0; // Variabele om de verstreken tijd bij te houden
 let hintCount = 0
 let showHintButton = false;
+let countdownInterval;
 function onYouTubeIframeAPIReady() {
     const player = new YT.Player('youtube-video', {
         events: {
@@ -37,15 +38,18 @@ function showTimer() {
 
 function startCountdown() {
     const timerElement = document.getElementById('timer');
-    const interval = setInterval(() => {
+    const endTime = Date.now() + countdownTime * 1000;
+    
+    countdownInterval = setInterval(() => {
+        const remainingTime = Math.max(0, endTime - Date.now());
+        countdownTime = Math.floor(remainingTime / 1000);
         let minutes = Math.floor(countdownTime / 60);
         let seconds = countdownTime % 60;
         seconds = seconds < 10 ? '0' + seconds : seconds;
         timerElement.textContent = `${minutes}:${seconds}`;
-        countdownTime--;
         elapsedTime++; // Verhoog de verstreken tijd bij elke seconde
-        if (countdownTime < 0) {
-            clearInterval(interval);
+        if (remainingTime <= 0) {
+            clearInterval(countdownInterval);
             timerElement.textContent = "Tijd is om!";
         }
     }, 1000);
@@ -84,6 +88,8 @@ function checkAnswer() {
             document.getElementById('hint-section').classList.add('hidden');
         } else {
             document.getElementById('question-section').innerHTML = "<h2>Gefeliciteerd, u heeft alle vragen beantwoord!</h2>";
+            clearInterval(countdownInterval); // Stop de timer
+            showSuccessVideo(); // Toon de succesvideo
         }
     } else {
 
@@ -140,6 +146,14 @@ const questions = {
     4: { question: "We weten via een informant van onze organisatie dat een deel van de code op de computer van M. Vermeulen staat. Om in de computer te komen en dit deel van de code te bemachtigen moeten jullie deze zien te ontcijferen. Het zit versleuteld achter een vernuftigd systeem van matrices. Matrix A & B zijn beide 3x3 matrices  ", answer: "3288", hint: ["binary", false],hintTime: [120,240,9999999999] },
     5: { question: "Iendvraag de code van de kluis is 8 de locatie is 161 voor de trein was de code -10500 en voor het kraken van de computer is 3288 ", answer: "-10500/(161–3288/8)=42", hint: ["vul de hele som",'Eindvraag de som is de zelfde berekening als de die in het koffertje( met andere cijfers)'],hintTime: [180,600]},
 };
+
+function showSuccessVideo() {
+    document.getElementById('question-section').innerHTML = `
+        <div class="video-container">
+            <iframe id="youtube-success-video" width="560" height="315" src="https://www.youtube.com/embed/965BNWqVF-w?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    `;
+}
 
 let currentQuestion = 1;
 
