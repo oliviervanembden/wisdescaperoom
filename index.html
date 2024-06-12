@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -19,32 +20,57 @@
         </section>
         <section id="question-section" class="hidden">
             <h2 id="question">Volgens een gevangen genomen Noord Koreaanse hacker is de code: b-e+r-g</h2>
+            <div id = "matrixen" class = "hidden">
+                <div class="matrix-container">
+                    <span class="matrix-label">A = </span>
+                    <table class="matrix">
+                        <tr>
+                            <td>0101</td>
+                            <td>1000</td>
+                            <td>0110</td>
+                        </tr>
+                        <tr>
+                            <td>10011</td>
+                            <td>1010</td>
+                            <td>1011</td>
+                        </tr>
+                        <tr>
+                            <td>0111</td>
+                            <td>10</td>
+                            <td>11</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="matrix-container ">
+                    <span class="matrix-label">B = </span>
+                    <table class="matrix">
+                        <tr>
+                            <td>1010</td>
+                            <td>0111</td>
+                            <td>0110</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>100</td>
+                            <td>1100</td>
+                        </tr>
+                        <tr>
+                            <td>1001</td>
+                            <td>10</td>
+                            <td>11</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div id="hints">
+                
+            </div>
             <input type="text" id="answer" placeholder="Uw antwoord">
             <button onclick="checkAnswer()">Indienen</button>
             <p id="feedback"></p>
         </section>
+    
         <section id="hint-section" class="hidden"></section> <!-- Hintsectie toegevoegd -->
-<div class="matrix-container">
-    <span class="matrix-label">A = </span>
-    <table class="matrix">
-        <tr>
-            <td>1</td>
-            <td>2</td>
-            <td>3</td>
-        </tr>
-        <tr>
-            <td>4</td>
-            <td>5</td>
-            <td>6</td>
-        </tr>
-        <tr>
-            <td>7</td>
-            <td>8</td>
-            <td>9</td>
-        </tr>
-    </table>
-</div>
-
 
     </main>
     <script src="scripts.js"></script>
