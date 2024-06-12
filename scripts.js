@@ -60,7 +60,7 @@ function checkAnswer() {
     const feedback = document.getElementById('feedback');
     const question = questions[currentQuestion];
 
-    if (userAnswer.toLowerCase() === question.answer.toLowerCase()) {
+    if (userAnswer.toLowerCase().replace(/\s/g, ''); === question.answer.toLowerCase()) {
         feedback.textContent = "Juist antwoord!";
         currentQuestion++;
         if (questions[currentQuestion]) {
