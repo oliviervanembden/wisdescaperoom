@@ -1,14 +1,17 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Orbitron', sans-serif;
     margin: 0;
     padding: 0;
     text-align: center;
+    background-color: #0d0d0d;
+    color: #00ffcc;
 }
 
 header {
     background-color: #333;
-    color: white;
+    color: #00ffcc;
     padding: 1em 0;
+    border-bottom: 2px solid #00ffcc;
 }
 
 main {
@@ -17,15 +20,20 @@ main {
 
 .video-container {
     display: inline-block;
+    border: 2px solid #00ffcc;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 #timer {
     margin: 20px 0;
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
+    background: rgba(0, 0, 0, 0.7);
+    color: #00ffcc;
     padding: 10px;
     border-radius: 5px;
     font-size: 24px;
+    border: 2px solid #00ffcc;
 }
 
 .hidden {
@@ -35,22 +43,64 @@ main {
 #question-section {
     margin-top: 20px;
 }
+
 .matrix-container {
     display: flex;
     align-items: center;
+    justify-content: center;
+    margin: 10px 0;
 }
 
 .matrix-label {
     font-weight: bold;
     margin-right: 10px;
+    color: #00ffcc;
 }
 
 .matrix {
     border-collapse: collapse;
     text-align: center;
+    color: #00ffcc;
 }
 
-th, td {
-    border: 1px solid black;
+.matrix td {
     padding: 10px;
+    color: #00ffcc;
+    background-color: #0d0d0d; /* Zelfde kleur als de achtergrond */
+}
+
+input[type="text"] {
+    padding: 10px;
+    border: 2px solid #00ffcc;
+    border-radius: 5px;
+    background-color: #1a1a1a;
+    color: #00ffcc;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #00ffcc;
+    color: #0d0d0d;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #00e6b8;
+}
+
+p#feedback {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #ff6666;
+}
+
+#hints {
+    margin-top: 20px;
+    color: #00ffcc;
+    font-size: 16px;
 }
