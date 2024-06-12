@@ -35,3 +35,22 @@ main {
 #question-section {
     margin-top: 20px;
 }
+.matrix-container {
+    display: flex;
+    align-items: center;
+}
+
+.matrix-label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.matrix {
+    border-collapse: collapse;
+    text-align: center;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 10px;
+}
