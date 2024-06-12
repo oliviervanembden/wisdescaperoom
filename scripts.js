@@ -100,7 +100,7 @@ const questions = {
     1: { question: "Volgens een gevangen genomen Noord Koreaanse hacker is de code: b-e+r-g", answer: "8", hint: "Dr. A. Scii weet het antwoord." },
     2: { question: "Vraag 2: Los op: 8x - 186.372 = y, 16 - √x + 225.666", answer: "161", hint: "Het snijpunt is een coordinaat." },
     3: { question: "113: ", answer: "-10100", hint: "" },
-    4: { question: "Vraag 4: ", answer: "3288", hint: "" },
+    4: { question: "Vraag 4: We weten via een informant van onze organisatie dat een deel van de code op de computer van M. Vermeulen staat. Om in de computer te komen en dit deel van de code te bemachtigen moeten jullie deze zien te ontcijferen. Het zit versleuteld achter een vernuftigd systeem van matrices. Matrix A & B zijn beide 3x3 matrices  ", answer: "3288", hint: "" },
     5: { question: "Iendvraag de code van de kluis is 8 de locatie is 161 voor de trein was de code -10100 en voor het kraken van de computer is 3288 ", answer: "-10500/(161–3288/8)=42", hint: "" },
     // Voeg meer vragen toe zoals nodig
 };
