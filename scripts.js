@@ -5,6 +5,7 @@ let elapsedTime = 0; // Variabele om de verstreken tijd bij te houden
 let hintCount = 0
 let showHintButton = false;
 let countdownInterval;
+let timeBoost = 180;
 function onYouTubeIframeAPIReady() {
     const player = new YT.Player('youtube-video', {
         events: {
@@ -66,6 +67,8 @@ function checkAnswer() {
     const question = questions[currentQuestion];
 
     if (userAnswer.toLowerCase().replace(/\s/g, '') === question.answer.toLowerCase()) {
+        elapsedTime += timeBoost;
+        timeBoost = 180;
         feedback.textContent = "Juist antwoord!";
         document.getElementById('hints').innerHTML = '';
         currentQuestion++;
@@ -83,8 +86,7 @@ function checkAnswer() {
             document.getElementById('question').textContent = questions[currentQuestion].question;
             document.getElementById('answer').value = '';
             feedback.textContent = '';
-            hintAvailable = false; // Reset de hint beschikbaarheid bij een juist antwoord
-            elapsedTime = 0; // Reset de verstreken tijd bij een juist antwoord
+            hintAvailable = false; // Reset de hint beschikbaarheid bij een juist antwoord // Reset de verstreken tijd bij een juist antwoord
             document.getElementById('hint-section').classList.add('hidden');
         } else {
             document.getElementById('question-section').innerHTML = "<h2>Gefeliciteerd, u heeft alle vragen beantwoord!</h2>";
@@ -94,7 +96,7 @@ function checkAnswer() {
     } else {
 
         
-        if (elapsedTime >= questions[currentQuestion].hintTime[hintCount]) { // Controleer of er al 8 minuten zijn verstreken en de hint nog niet is gegeven 480
+        if (elapsedTime >= questions[currentQuestion].hintTime[hintCount]) { 
             feedback.textContent = "Onjuist antwoord, probeer het met een hint.";
             displayHintButton();
         } else if(questions[currentQuestion].hintTime[hintCount]< 10000 ){
@@ -120,7 +122,9 @@ function displayHintButton() {
 }
 
 function showHint() {
+    timeBoost = 0;
     if (questions[currentQuestion].hint[hintCount]=== false){
+
         var elem = document.createElement("img");
         elem.setAttribute("src", "dataimg.jpg");
         elem.setAttribute("alt", "Flower");
@@ -141,10 +145,10 @@ function showHint() {
 
 const questions = {
     1: { question: "Volgens een gevangen genomen Noord Koreaanse hacker is de code: i-W+i-s", answer: "8", hint: ["Dr. A. Scii weet het antwoord."],hintTime: [300,999999999] },
-    2: { question: "Vind de locatie 8x - 186.372 = y en 16 * - √x + 225.666 = y", answer: "161", hint: ["Het snijpunt is een coordinaat.", "het antwoord is een getal"],hintTime: [360,600,999999999] },
-    3: { question: "113", answer: "-10500", hint: ["Het is een lokaal","Zoek goed","a=1"], hintTime: [180,300,480,99999999] },
-    4: { question: "We weten via een informant van onze organisatie dat een deel van de code op de computer van M. Vermeulen staat. Om in de computer te komen en dit deel van de code te bemachtigen moeten jullie deze zien te ontcijferen. Het zit versleuteld achter een vernuftigd systeem van matrices. Matrix A & B zijn beide 3x3 matrices. Vermenigvuldig matrix a met matrix b en bereken vervolgens van de ontstaande matrix C de determinant.   ", answer: "3288", hint: ["binary", false],hintTime: [120,240,9999999999] },
-    5: { question: "Eindvraag de code van de kluis is 8 de locatie is 161 voor de trein was de code -10500 en voor het kraken van de computer is 3288 ", answer: "-10500/(161–3288/8)=42", hint: ["vul de hele som",'Eindvraag de som is de zelfde berekening als de die in het koffertje( met andere cijfers)'],hintTime: [180,600]},
+    2: { question: "Vind de locatie 8x - 186.372 = y en 16 * - √x + 225.666 = y", answer: "161", hint: ["Het snijpunt is een coordinaat.", "het antwoord is een getal"],hintTime: [480,1080,999999999] },
+    3: { question: "113", answer: "-10500", hint: ["Het is een lokaal","Zoek goed","a=1"], hintTime: [1260,1560,1740,99999999] },
+    4: { question: "We weten via een informant van onze organisatie dat een deel van de code op de computer van M. Vermeulen staat. Om in de computer te komen en dit deel van de code te bemachtigen moeten jullie deze zien te ontcijferen. Het zit versleuteld achter een vernuftigd systeem van matrices. Matrix A & B zijn beide 3x3 matrices. Vermenigvuldig matrix a met matrix b en bereken vervolgens van de ontstaande matrix C de determinant.   ", answer: "3288", hint: ["binary", false],hintTime: [1860,2100,9999999999] },
+    5: { question: "Eindvraag de code van de kluis is 8 de locatie is 161 voor de auto was de code -10500 en voor het kraken van de computer is 3288 ", answer: "-10500/(161–3288/8)=42", hint: ["vul de hele som",'Eindvraag de som is de zelfde berekening als de die in het koffertje( met andere cijfers)'],hintTime: [2400,2700,9999999]},
 };
 
 function showSuccessVideo() {
