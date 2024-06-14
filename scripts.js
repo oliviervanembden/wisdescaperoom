@@ -146,9 +146,9 @@ function showHint() {
 const questions = {
     1: { question: "Volgens een gevangen genomen Noord Koreaanse hacker is de code: i-W+i-s", answer: "8", hint: ["Dr. A. Scii weet het antwoord."],hintTime: [300,999999999] },
     2: { question: "Vind de locatie 8x - 186.372 = y en 16 * - √x + 225.666 = y", answer: "161", hint: ["Het snijpunt is een coordinaat.", "het antwoord is een getal"],hintTime: [480,1080,999999999] },
-    3: { question: "113", answer: "-10500", hint: ["Het is een lokaal","Zoek goed","a=1"], hintTime: [1260,1560,1740,99999999] },
+    3: { question: "113", answer: "-10500", hint: ["Het is een lokaal","Zoek goed","x=m"], hintTime: [1260,1560,1740,99999999] },
     4: { question: "We weten via een informant van onze organisatie dat een deel van de code op de computer van M. Vermeulen staat. Om in de computer te komen en dit deel van de code te bemachtigen moeten jullie deze zien te ontcijferen. Het zit versleuteld achter een vernuftigd systeem van matrices. Matrix A & B zijn beide 3x3 matrices. Vermenigvuldig matrix a met matrix b en bereken vervolgens van de ontstaande matrix C de determinant.   ", answer: "3288", hint: ["binary", false],hintTime: [1860,2100,9999999999] },
-    5: { question: "Eindvraag de code van de kluis is 8 de locatie is 161 voor de auto was de code -10500 en voor het kraken van de computer is 3288 ", answer: "-10500/(161–3288/8)=42", hint: ["vul de hele som",'Eindvraag de som is de zelfde berekening als de die in het koffertje( met andere cijfers)'],hintTime: [2400,2700,9999999]},
+    5: { question: "Eindvraag de code van de kluis is 8 de locatie is 161 voor de auto was de code -10500 en voor het kraken van de computer is 3288 ", answer: "-10500/(161-3288/8)=42", hint: ["vul de hele som",'Eindvraag de som is de zelfde berekening als de die in het koffertje( met andere cijfers)'],hintTime: [2400,2700,9999999]},
 };
 
 function showSuccessVideo() {
