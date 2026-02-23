@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Grinwis calculator</title>
+  <style>
+    :root{
+      --bg1:#070A12;
+      --bg2:#0B1022;
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.68);
+      --line: rgba(255,255,255,0.12);
+      --accent1:#7C4DFF;
+      --accent2:#00E5FF;
+      --good:#35FFB2;
+      --bad:#FF4D7D;
+      --shadow: 0 24px 70px rgba(0,0,0,0.45);
+      --radius: 18px;
+    }
+
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% 20%, rgba(124,77,255,0.28), transparent 60%),
+        radial-gradient(900px 600px at 85% 35%, rgba(0,229,255,0.18), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 28px;
+    }
+
+    .wrap{ width: min(900px, 100%); display:grid; gap: 18px; }
+
+    .header{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 14px;
+      padding: 4px 2px;
+      flex-wrap: wrap;
+    }
+    .title h1{
+      margin:0;
+      font-size: clamp(22px, 3.2vw, 34px);
+      letter-spacing: 0.2px;
+    }
+    .title p{
+      margin:8px 0 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .pill{
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 13px;
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:99px;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      box-shadow: 0 0 20px rgba(124,77,255,0.6);
+    }
+
+    .card{
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.04));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card-inner{ padding: 18px; display:grid; gap: 14px; }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    label{
+      display:block;
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0 0 8px 2px;
+    }
+
+    input{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(10,14,28,0.55);
+      color: var(--text);
+      outline: none;
+      transition: border 180ms ease, background 180ms ease;
+    }
+    input::placeholder{ color: rgba(255,255,255,0.35); }
+    input:focus{
+      border-color: rgba(0,229,255,0.38);
+      background: rgba(10,14,28,0.70);
+      box-shadow: 0 0 0 4px rgba(0,229,255,0.08);
+    }
+    input[readonly]{
+      opacity: 0.95;
+      border-color: rgba(255,255,255,0.10);
+    }
+
+    .row{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items:center;
+    }
+
+    button{
+      cursor:pointer;
+      border: 0;
+      padding: 12px 16px;
+      border-radius: 14px;
+      color: #071022;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      background: linear-gradient(90deg, var(--accent2), var(--accent1));
+      box-shadow: 0 10px 26px rgba(124,77,255,0.22);
+      transition: transform 140ms ease, filter 140ms ease;
+    }
+    button:hover{ transform: translateY(-1px); filter: brightness(1.06); }
+    button:active{ transform: translateY(0px); }
+
+    .ghost{
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border: 1px solid var(--line);
+      font-weight: 600;
+      box-shadow: none;
+    }
+
+    .msg{
+      width: 100%;
+      border-radius: 14px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      display:none;
+    }
+    .msg.show{ display:block; }
+
+    .msg.bad{
+      background: rgba(255,77,125,0.12);
+      border-color: rgba(255,77,125,0.25);
+      color: rgba(255,255,255,0.86);
+    }
+
+    .msg.good{
+      background: rgba(53,255,178,0.10);
+      border-color: rgba(53,255,178,0.20);
+      color: rgba(255,255,255,0.86);
+    }
+
+    .results{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .result-box{
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      border-radius: 16px;
+      padding: 14px;
+      display:grid;
+      gap: 6px;
+    }
+    .result-box .k{ color: var(--muted); font-size: 12px; }
+    .result-box .v{ font-size: 22px; font-weight: 800; letter-spacing: 0.2px; }
+
+    .delta{
+      grid-column: 1 / -1;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      border-radius: 16px;
+      padding: 14px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .delta .left{ display:grid; gap: 6px; }
+    .delta .k{ color: var(--muted); font-size: 12px; }
+    .delta .v{ font-size: 18px; font-weight: 800; }
+
+    .badge{
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 12px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.05);
+      margin-left: auto;
+      align-self: flex-start;
+    }
+    .badge.good{ color: var(--good); }
+    .badge.bad{ color: var(--bad); }
+
+    .smallnote{
+      color: var(--muted);
+      font-size: 12px;
+      margin: 0 0 2px 2px;
+    }
+
+    @media (max-width: 820px){
+      .grid{ grid-template-columns: 1fr; }
+      .results{ grid-template-columns: 1fr; }
+      .badge{ margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div class="title">
+        <h1>Grinwis calculator</h1>
+        <p>Cataloguswaarde via RDW, dagwaarde automatisch op 9 procent.</p>
+      </div>
+      <div class="pill"><span class="dot"></span> dagwaarde × 0.35, cataloguswaarde × 0.25</div>
+    </div>
+
+    <div class="card">
+      <div class="card-inner">
+        <div class="grid">
+          <div>
+            <label for="plate">Nummerbord</label>
+            <input id="plate" placeholder="Bijv. AB123C" autocomplete="off" />
+            <div class="smallnote" id="rdwStatus">Vul nummerbord in, dan pak ik cataloguswaarde uit RDW.</div>
+          </div>
+
+          <div>
+            <label for="catalog">Cataloguswaarde (€)</label>
+            <input id="catalog" inputmode="decimal" placeholder="Wordt gevuld via RDW" readonly />
+          </div>
+
+          <div>
+            <label for="dayvalue">Dagwaarde (€) (auto 9 procent)</label>
+            <input id="dayvalue" inputmode="decimal" placeholder="Wordt automatisch gevuld" />
+          </div>
+        </div>
+
+        <div class="row">
+          <button id="calcBtn">Bereken</button>
+          <button id="resetBtn" class="ghost" type="button">Reset</button>
+          <button id="manualBtn" class="ghost" type="button">Cataloguswaarde zelf invullen</button>
+        </div>
+
+        <div id="msg" class="msg"></div>
+
+        <div class="results" aria-live="polite">
+          <div class="result-box">
+            <div class="k">Bijtelling nu (dagwaarde × 0.35)</div>
+            <div class="v" id="nowOut">€ 0,00</div>
+          </div>
+          <div class="result-box">
+            <div class="k">Nieuwe bijtelling (cataloguswaarde × 0.25)</div>
+            <div class="v" id="newOut">€ 0,00</div>
+          </div>
+
+          <div class="delta">
+            <div class="left">
+              <div class="k">Verschil (nieuwe minus nu)</div>
+              <div class="v" id="diffOut">€ 0,00</div>
+              <div class="k" id="plateOut"></div>
+            </div>
+            <div>
+              <div class="k">Procent meer geworden</div>
+              <div class="v" id="pctOut">0,00%</div>
+            </div>
+            <div class="badge" id="badge">geen verschil</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const plateEl = document.getElementById("plate");
+    const catalogEl = document.getElementById("catalog");
+    const dayvalueEl = document.getElementById("dayvalue");
+    const rdwStatus = document.getElementById("rdwStatus");
+
+    const nowOut = document.getElementById("nowOut");
+    const newOut = document.getElementById("newOut");
+    const diffOut = document.getElementById("diffOut");
+    const pctOut = document.getElementById("pctOut");
+    const plateOut = document.getElementById("plateOut");
+    const badge = document.getElementById("badge");
+    const msgEl = document.getElementById("msg");
+
+    const euro = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR" });
+    const pctFmt = new Intl.NumberFormat("nl-NL", { style: "percent", minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    // RDW Open Data is Socrata (SODA). Je kunt JSON queryen via /resource/{id}.json  [oai_citation:1‡dev.socrata.com](https://dev.socrata.com/?utm_source=chatgpt.com)
+    // Dataset personenauto's met catalogusprijs: aq35-ccn7  [oai_citation:2‡RDW](https://opendata.rdw.nl/Voertuigen/Personenauto-s-met-Catalogusprijs/aq35-ccn7?utm_source=chatgpt.com)
+    const RDW_DATASET_ID = "aq35-ccn7";
+    const RDW_BASE = "https://opendata.rdw.nl/resource/" + RDW_DATASET_ID + ".json";
+
+    function normalizePlate(raw){
+      return (raw || "")
+        .toUpperCase()
+        .replace(/[^A-Z0-9]/g, "");
+    }
+
+    function parseMoney(value){
+      if (!value) return NaN;
+      const cleaned = value
+        .toString()
+        .trim()
+        .replaceAll(".", "")
+        .replace(",", ".");
+      return Number(cleaned);
+    }
+
+    function setMoneyInput(el, amount){
+      if (!Number.isFinite(amount)) return;
+      el.value = String(Math.round(amount * 100) / 100).replace(".", ",");
+    }
+
+    function showMsg(text, type){
+      msgEl.textContent = text;
+      msgEl.className = "msg show" + (type ? " " + type : "");
+    }
+
+    function hideMsg(){
+      msgEl.className = "msg";
+      msgEl.textContent = "";
+    }
+
+    function setBadge(diff){
+      badge.classList.remove("good","bad");
+      if (diff > 0){
+        badge.textContent = "nieuwe hoger";
+        badge.classList.add("bad");
+        return;
+      }
+      if (diff < 0){
+        badge.textContent = "nieuwe lager";
+        badge.classList.add("good");
+        return;
+      }
+      badge.textContent = "geen verschil";
+    }
+
+    function autoDayValueFromCatalog(){
+      const catalog = parseMoney(catalogEl.value);
+      if (!Number.isFinite(catalog) || catalog <= 0) return;
+      const autoDayValue = catalog * 0.09;
+      setMoneyInput(dayvalueEl, autoDayValue);
+    }
+
+    function enableManualCatalog(enable){
+      catalogEl.readOnly = !enable;
+      if (enable){
+        catalogEl.placeholder = "Vul cataloguswaarde in";
+        showMsg("Wil je de cataloguswaarde zelf invullen", "bad");
+        catalogEl.focus();
+      } else {
+        catalogEl.placeholder = "Wordt gevuld via RDW";
+      }
+    }
+
+    async function fetchCatalogFromRDW(){
+      hideMsg();
+
+      const plate = normalizePlate(plateEl.value);
+      if (!plate || plate.length < 6){
+        rdwStatus.textContent = "Vul nummerbord in, dan pak ik cataloguswaarde uit RDW.";
+        return;
+      }
+
+      rdwStatus.textContent = "RDW wordt opgehaald...";
+      enableManualCatalog(false);
+
+      try{
+        // Socrata filter: ?kenteken=XXYYZZ
+        const url = RDW_BASE + "?kenteken=" + encodeURIComponent(plate) + "&$limit=1";
+        const res = await fetch(url, { headers: { "Accept": "application/json" } });
+
+        if (!res.ok){
+          rdwStatus.textContent = "RDW gaf een fout terug. Je kan handmatig invullen.";
+          enableManualCatalog(true);
+          return;
+        }
+
+        const data = await res.json();
+
+        if (!Array.isArray(data) || data.length === 0){
+          rdwStatus.textContent = "Geen RDW record gevonden. Je kan handmatig invullen.";
+          enableManualCatalog(true);
+          return;
+        }
+
+        const row = data[0];
+
+        // In deze dataset staat de waarde meestal onder "catalogusprijs".
+        // Sommige portals kunnen naming verschillen hebben. Daarom check ik ook alternatieven.
+        const raw =
+          row.catalogusprijs ??
+          row.cataloguswaarde ??
+          row.catalogusprijs_in_euro ??
+          row.catalogus_price ??
+          row.catalog_price;
+
+        const value = Number(raw);
+
+        if (!Number.isFinite(value) || value <= 0){
+          rdwStatus.textContent = "Cataloguswaarde staat op 0 of ontbreekt.";
+          showMsg("Ik kan de cataloguswaarde niet vinden. Wil je het zelf invullen", "bad");
+          enableManualCatalog(true);
+          return;
+        }
+
+        setMoneyInput(catalogEl, value);
+        autoDayValueFromCatalog();
+
+        rdwStatus.textContent = "Cataloguswaarde is gevonden via RDW.";
+        showMsg("RDW cataloguswaarde geladen, dagwaarde is op 9 procent gezet.", "good");
+      } catch (e){
+        rdwStatus.textContent = "RDW ophalen lukt niet. Je kan handmatig invullen.";
+        enableManualCatalog(true);
+      }
+    }
+
+    function calculate(){
+      hideMsg();
+
+      const plate = normalizePlate(plateEl.value);
+      const catalog = parseMoney(catalogEl.value);
+      const dayvalue = parseMoney(dayvalueEl.value);
+
+      if (!plate){
+        showMsg("Vul een nummerbord in.", "bad");
+        return;
+      }
+      if (!Number.isFinite(catalog) || catalog <= 0){
+        showMsg("Cataloguswaarde ontbreekt. Vul hem in of laat RDW hem ophalen.", "bad");
+        enableManualCatalog(true);
+        return;
+      }
+      if (!Number.isFinite(dayvalue) || dayvalue <= 0){
+        showMsg("Vul een geldige dagwaarde in.", "bad");
+        return;
+      }
+
+      const nowBijtelling = dayvalue * 0.35;
+      const newBijtelling = catalog * 0.25;
+      const diff = newBijtelling - nowBijtelling;
+
+      nowOut.textContent = euro.format(nowBijtelling);
+      newOut.textContent = euro.format(newBijtelling);
+      diffOut.textContent = euro.format(diff);
+      plateOut.textContent = "Nummerbord: " + plate;
+
+      let pct = 0;
+      if (nowBijtelling !== 0){
+        pct = diff / nowBijtelling;
+      }
+      pctOut.textContent = pctFmt.format(pct);
+
+      setBadge(diff);
+    }
+
+    function reset(){
+      hideMsg();
+      plateEl.value = "";
+      catalogEl.value = "";
+      dayvalueEl.value = "";
+
+      enableManualCatalog(false);
+      rdwStatus.textContent = "Vul nummerbord in, dan pak ik cataloguswaarde uit RDW.";
+
+      nowOut.textContent = euro.format(0);
+      newOut.textContent = euro.format(0);
+      diffOut.textContent = euro.format(0);
+      pctOut.textContent = "0,00%";
+      plateOut.textContent = "";
+      badge.textContent = "geen verschil";
+      badge.classList.remove("good","bad");
+
+      plateEl.focus();
+    }
+
+    // Handmatig invullen knop
+    document.getElementById("manualBtn").addEventListener("click", () => {
+      enableManualCatalog(true);
+    });
+
+    // RDW ophalen als je nummerbord verlaat, en ook met Enter
+    plateEl.addEventListener("blur", fetchCatalogFromRDW);
+    plateEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") fetchCatalogFromRDW();
+    });
+
+    // Als cataloguswaarde verandert, update dagwaarde op 9 procent
+    catalogEl.addEventListener("input", () => {
+      autoDayValueFromCatalog();
+    });
+
+    document.getElementById("calcBtn").addEventListener("click", calculate);
+    document.getElementById("resetBtn").addEventListener("click", reset);
+
+    // Enter in andere velden rekent meteen
+    [catalogEl, dayvalueEl].forEach(el => {
+      el.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") calculate();
+      });
+    });
+  </script>
+</body>
+</html>
