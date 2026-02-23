@@ -1,73 +1,390 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="nl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escape Room</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bijtelling calculator</title>
+  <style>
+    :root{
+      --bg1:#070A12;
+      --bg2:#0B1022;
+      --card: rgba(255,255,255,0.06);
+      --card2: rgba(255,255,255,0.10);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.68);
+      --line: rgba(255,255,255,0.12);
+      --accent1:#7C4DFF;
+      --accent2:#00E5FF;
+      --good:#35FFB2;
+      --bad:#FF4D7D;
+      --shadow: 0 24px 70px rgba(0,0,0,0.45);
+      --radius: 18px;
+    }
+
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% 20%, rgba(124,77,255,0.28), transparent 60%),
+        radial-gradient(900px 600px at 85% 35%, rgba(0,229,255,0.18), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 28px;
+    }
+
+    .wrap{
+      width: min(860px, 100%);
+      display:grid;
+      gap: 18px;
+    }
+
+    .header{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 14px;
+      padding: 4px 2px;
+    }
+    .title{
+      line-height:1.05;
+    }
+    .title h1{
+      margin:0;
+      font-size: clamp(22px, 3.2vw, 34px);
+      letter-spacing: 0.2px;
+    }
+    .title p{
+      margin:8px 0 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .pill{
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 13px;
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:99px;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      box-shadow: 0 0 20px rgba(124,77,255,0.6);
+    }
+
+    .card{
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.04));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .card-inner{
+      padding: 18px;
+      display:grid;
+      gap: 16px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    label{
+      display:block;
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0 0 8px 2px;
+    }
+
+    input{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(10,14,28,0.55);
+      color: var(--text);
+      outline: none;
+      transition: border 180ms ease, transform 120ms ease, background 180ms ease;
+    }
+    input::placeholder{ color: rgba(255,255,255,0.35); }
+    input:focus{
+      border-color: rgba(0,229,255,0.38);
+      background: rgba(10,14,28,0.70);
+      box-shadow: 0 0 0 4px rgba(0,229,255,0.08);
+    }
+
+    .actions{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button{
+      cursor:pointer;
+      border: 0;
+      padding: 12px 16px;
+      border-radius: 14px;
+      color: #071022;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      background: linear-gradient(90deg, var(--accent2), var(--accent1));
+      box-shadow: 0 10px 26px rgba(124,77,255,0.22);
+      transition: transform 140ms ease, filter 140ms ease;
+    }
+    button:hover{ transform: translateY(-1px); filter: brightness(1.06); }
+    button:active{ transform: translateY(0px); }
+
+    .ghost{
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border: 1px solid var(--line);
+      font-weight: 600;
+      box-shadow: none;
+    }
+
+    .results{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .result-box{
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      border-radius: 16px;
+      padding: 14px;
+      display:grid;
+      gap: 6px;
+    }
+    .result-box .k{
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .result-box .v{
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+
+    .delta{
+      grid-column: 1 / -1;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      border-radius: 16px;
+      padding: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 14px;
+    }
+    .delta .left{
+      display:grid;
+      gap: 6px;
+    }
+    .delta .k{ color: var(--muted); font-size: 12px; }
+    .delta .v{ font-size: 18px; font-weight: 800; }
+
+    .badge{
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 12px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.05);
+    }
+    .badge.good{ color: var(--good); }
+    .badge.bad{ color: var(--bad); }
+
+    .error{
+      color: rgba(255,255,255,0.86);
+      background: rgba(255,77,125,0.12);
+      border: 1px solid rgba(255,77,125,0.25);
+      padding: 10px 12px;
+      border-radius: 14px;
+      display:none;
+    }
+
+    @media (max-width: 820px){
+      .grid{ grid-template-columns: 1fr; }
+      .results{ grid-template-columns: 1fr; }
+      .delta{ flex-direction: column; align-items:flex-start; }
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Welkom bij de Escape Room</h1>
-    </header>
-    <main>
-        <div id="timer" class="hidden">50:00</div>
-        <section id="video-section">
-            <div class="video-container">
-                <iframe id="youtube-video" width="560" height="315" src="https://www.youtube.com/embed/FWTOAxVztGs?enablejsapi=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  <div class="wrap">
+    <div class="header">
+      <div class="title">
+        <h1>Bijtelling calculator</h1>
+        <p>Bereken bijtelling nu op dagwaarde en nieuwe bijtelling op cataloguswaarde.</p>
+      </div>
+      <div class="pill"><span class="dot"></span> dagwaarde × 0.35, cataloguswaarde × 0.25</div>
+    </div>
+
+    <div class="card">
+      <div class="card-inner">
+        <div class="grid">
+          <div>
+            <label for="plate">Nummerbord</label>
+            <input id="plate" placeholder="Bijv. AB-123-C" autocomplete="off" />
+          </div>
+          <div>
+            <label for="catalog">Cataloguswaarde (€)</label>
+            <input id="catalog" inputmode="decimal" placeholder="Bijv. 45000" />
+          </div>
+          <div>
+            <label for="dayvalue">Dagwaarde (€)</label>
+            <input id="dayvalue" inputmode="decimal" placeholder="Bijv. 22000" />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="calcBtn">Bereken</button>
+          <button id="resetBtn" class="ghost" type="button">Reset</button>
+          <div id="error" class="error"></div>
+        </div>
+
+        <div class="results" aria-live="polite">
+          <div class="result-box">
+            <div class="k">Bijtelling nu (dagwaarde × 0.35)</div>
+            <div class="v" id="nowOut">€ 0,00</div>
+          </div>
+          <div class="result-box">
+            <div class="k">Nieuwe bijtelling (cataloguswaarde × 0.25)</div>
+            <div class="v" id="newOut">€ 0,00</div>
+          </div>
+
+          <div class="delta">
+            <div class="left">
+              <div class="k">Verschil (nieuwe minus nu)</div>
+              <div class="v" id="diffOut">€ 0,00</div>
+              <div class="k" id="plateOut"></div>
             </div>
-        </section>
-        <section id="question-section" class="hidden">
-            <h2 id="question">Volgens een gevangen genomen Noord Koreaanse hacker is de code: i-W+i-s</h2>
-            <div id="matrixen" class="hidden">
-                <div class="matrix-container">
-                    <span class="matrix-label">A = </span>
-                    <table class="matrix">
-                        <tr>
-                            <td>0101</td>
-                            <td>1000</td>
-                            <td>0110</td>
-                        </tr>
-                        <tr>
-                            <td>10011</td>
-                            <td>1010</td>
-                            <td>1011</td>
-                        </tr>
-                        <tr>
-                            <td>0111</td>
-                            <td>10</td>
-                            <td>11</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="matrix-container">
-                    <span class="matrix-label">B = </span>
-                    <table class="matrix">
-                        <tr>
-                            <td>1010</td>
-                            <td>0111</td>
-                            <td>0110</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>100</td>
-                            <td>1100</td>
-                        </tr>
-                        <tr>
-                            <td>1001</td>
-                            <td>10</td>
-                            <td>11</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div id="hints"></div>
-            <input type="text" id="answer" placeholder="Uw antwoord">
-            <button onclick="checkAnswer()">Indienen</button>
-            <p id="feedback"></p>
-        </section>
-        <section id="hint-section" class="hidden"></section>
-    </main>
-    <script src="scripts.js"></script>
+            <div class="badge" id="badge">geen verschil</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const plateEl = document.getElementById("plate");
+    const catalogEl = document.getElementById("catalog");
+    const dayvalueEl = document.getElementById("dayvalue");
+
+    const nowOut = document.getElementById("nowOut");
+    const newOut = document.getElementById("newOut");
+    const diffOut = document.getElementById("diffOut");
+    const plateOut = document.getElementById("plateOut");
+    const badge = document.getElementById("badge");
+    const errorEl = document.getElementById("error");
+
+    const euro = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR" });
+
+    function parseMoney(value){
+      if (!value) return NaN;
+      const cleaned = value
+        .toString()
+        .trim()
+        .replaceAll(".", "")
+        .replace(",", ".");
+      return Number(cleaned);
+    }
+
+    function showError(msg){
+      errorEl.textContent = msg;
+      errorEl.style.display = "block";
+    }
+
+    function clearError(){
+      errorEl.textContent = "";
+      errorEl.style.display = "none";
+    }
+
+    function setBadge(diff){
+      badge.classList.remove("good","bad");
+      if (diff > 0){
+        badge.textContent = "nieuwe hoger";
+        badge.classList.add("bad");
+        return;
+      }
+      if (diff < 0){
+        badge.textContent = "nieuwe lager";
+        badge.classList.add("good");
+        return;
+      }
+      badge.textContent = "geen verschil";
+    }
+
+    function calculate(){
+      clearError();
+
+      const plate = plateEl.value.trim();
+      const catalog = parseMoney(catalogEl.value);
+      const dayvalue = parseMoney(dayvalueEl.value);
+
+      if (!plate){
+        showError("Vul een nummerbord in.");
+        return;
+      }
+      if (!Number.isFinite(catalog) || catalog <= 0){
+        showError("Vul een geldige cataloguswaarde in.");
+        return;
+      }
+      if (!Number.isFinite(dayvalue) || dayvalue <= 0){
+        showError("Vul een geldige dagwaarde in.");
+        return;
+      }
+
+      const nowBijtelling = dayvalue * 0.35;
+      const newBijtelling = catalog * 0.25;
+      const diff = newBijtelling - nowBijtelling;
+
+      nowOut.textContent = euro.format(nowBijtelling);
+      newOut.textContent = euro.format(newBijtelling);
+      diffOut.textContent = euro.format(diff);
+      plateOut.textContent = "Nummerbord: " + plate.toUpperCase();
+
+      setBadge(diff);
+    }
+
+    function reset(){
+      clearError();
+      plateEl.value = "";
+      catalogEl.value = "";
+      dayvalueEl.value = "";
+      nowOut.textContent = euro.format(0);
+      newOut.textContent = euro.format(0);
+      diffOut.textContent = euro.format(0);
+      plateOut.textContent = "";
+      badge.textContent = "geen verschil";
+      badge.classList.remove("good","bad");
+      plateEl.focus();
+    }
+
+    document.getElementById("calcBtn").addEventListener("click", calculate);
+    document.getElementById("resetBtn").addEventListener("click", reset);
+
+    // Enter = bereken
+    [plateEl, catalogEl, dayvalueEl].forEach(el => {
+      el.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") calculate();
+      });
+    });
+  </script>
 </body>
 </html>
